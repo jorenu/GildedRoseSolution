@@ -1,5 +1,9 @@
 package com.gildedrose;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 class GildedRose {
     Item[] items;
 
@@ -9,54 +13,51 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            if (!item.name.equals("Aged Brie")
-                    && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (item.quality > 0) {
-                    if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                        item.quality = item.quality - 1;
-                    }
-                }
-            } else {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1;
-
-                    if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
-
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                item.sellIn = item.sellIn - 1;
-            }
-
-            if (item.sellIn < 0) {
-                if (!item.name.equals("Aged Brie")) {
-                    if (!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (item.quality > 0) {
-                            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                                item.quality = item.quality - 1;
-                            }
-                        }
-                    } else {
-                        item.quality = 0;
-                    }
-                } else {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
+            switch (item.name) {
+                case "Sulfuras, Hand of Ragnaros" -> {}
+                case "Aged Brie" -> updateAgedBrie(item);
+                case "Backstage passes to a TAFKAL80ETC concert" -> updateBackstagePasses(item);
+                default -> updateGenericItem(item);
             }
         }
     }
+
+    private void updateGenericItem(Item item) {
+        if (item.sellIn > 0) {
+            item.quality--;
+        } else {
+            item.quality -= 2;
+        }
+        fixQuality(item);
+        item.sellIn--;
+    }
+
+    private void updateAgedBrie(Item item) {
+        item.quality++;
+        fixQuality(item);
+        item.sellIn--;
+    }
+
+    private void updateBackstagePasses(Item item) {
+        if (item.sellIn > 10) {
+            item.quality++;
+        } else if (item.sellIn > 5) {
+            item.quality += 2;
+        } else if (item.sellIn > 0) {
+            item.quality += 3;
+        } else {
+            item.quality = 0;
+        }
+        fixQuality(item);
+        item.sellIn--;
+    }
+
+    private void fixQuality(Item item) {
+        if (item.quality < 0) {
+            item.quality = 0;
+        } else if (item.quality > 50) {
+            item.quality = 50;
+        }
+    }
+
 }

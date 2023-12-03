@@ -24,14 +24,14 @@ class GildedRose {
         } else {
             item.quality -= 2;
         }
-        fixQuality(item);
-        item.sellIn--;
+        enforceQualityBoundaries(item);
+        advanceDay(item);
     }
 
     private void updateAgedBrie(Item item) {
         item.quality++;
-        fixQuality(item);
-        item.sellIn--;
+        enforceQualityBoundaries(item);
+        advanceDay(item);
     }
 
     private void updateBackstagePasses(Item item) {
@@ -44,16 +44,20 @@ class GildedRose {
         } else {
             item.quality = 0;
         }
-        fixQuality(item);
-        item.sellIn--;
+        enforceQualityBoundaries(item);
+        advanceDay(item);
     }
 
-    private void fixQuality(Item item) {
+    private void enforceQualityBoundaries(Item item) {
         if (item.quality < 0) {
             item.quality = 0;
         } else if (item.quality > 50) {
             item.quality = 50;
         }
+    }
+
+    private void advanceDay(Item item) {
+        item.sellIn--;
     }
 
 }

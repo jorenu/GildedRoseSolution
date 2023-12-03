@@ -87,4 +87,12 @@ class GildedRoseTest {
         assertEquals(-1, app.items[0].sellIn);
     }
 
+    @Test
+    void test_ConjuredQualityDoubleDecrease() {
+        Item[] items = new Item[] { new Item("Conjured Mana Cake", 2, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(3, app.items[0].quality);
+    }
+
 }

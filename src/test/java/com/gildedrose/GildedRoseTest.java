@@ -71,7 +71,7 @@ class GildedRoseTest {
     }
 
     @Test
-    void test_RapidQualityIncrease_BackstagePasses() {
+    void test_RapidQualityIncrease_BackstagePasses_case1() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 8, 5) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
@@ -79,8 +79,24 @@ class GildedRoseTest {
     }
 
     @Test
-    void test_UltraRapidQualityIncrease_BackstagePasses() {
+    void test_RapidQualityIncrease_BackstagePasses_case2() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 10, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(7, app.items[0].quality);
+    }
+
+    @Test
+    void test_UltraRapidQualityIncrease_BackstagePasses_case1() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 2, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(8, app.items[0].quality);
+    }
+
+    @Test
+    void test_UltraRapidQualityIncrease_BackstagePasses_case2() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 5, 5) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(8, app.items[0].quality);

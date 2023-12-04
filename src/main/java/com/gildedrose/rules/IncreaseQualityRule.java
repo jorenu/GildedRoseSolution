@@ -8,11 +8,15 @@ import com.gildedrose.Item;
 public class IncreaseQualityRule implements InventoryRule {
     @Override
     public boolean appliesTo(Item item) {
-        return item.name.equals("Aged Brie");// || item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+        return item.name.equals("Aged Brie");
     }
 
     @Override
     public void apply(Item item) {
-        item.quality++;
+        if (item.sellIn > 0) {
+            item.quality++;
+        } else {
+            item.quality += 2;
+        }
     }
 }

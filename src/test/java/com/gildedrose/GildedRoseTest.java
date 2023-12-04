@@ -39,6 +39,14 @@ class GildedRoseTest {
     }
 
     @Test
+    void test_RapidQualityIncrease_AgedBrie() {
+        Item[] items = new Item[] { new Item("Aged Brie", -2, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(7, app.items[0].quality);
+    }
+
+    @Test
     void test_QualityIncrease_BackstagePasses() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 11, 5) };
         GildedRose app = new GildedRose(items);

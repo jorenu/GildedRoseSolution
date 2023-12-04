@@ -15,7 +15,7 @@ public class DecreaseQualityRule implements InventoryRule {
 
     @Override
     public void apply(Item item) {
-        if (item.sellIn < 0) {
+        if (item.sellIn <= 0) {
             item.quality -= 2;
         } else {
             item.quality--;

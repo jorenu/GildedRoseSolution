@@ -23,8 +23,16 @@ class GildedRoseTest {
     }
 
     @Test
-    void test_RapidQualityDecrease() {
-        Item[] items = new Item[] { new Item("Generic Item", -1, 5) };
+    void test_RapidQualityDecrease_case1() {
+        Item[] items = new Item[] { new Item("Generic Item", -5, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(3, app.items[0].quality);
+    }
+
+    @Test
+    void test_RapidQualityDecrease_case2() {
+        Item[] items = new Item[] { new Item("Generic Item", 0, 5) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(3, app.items[0].quality);
@@ -39,8 +47,16 @@ class GildedRoseTest {
     }
 
     @Test
-    void test_RapidQualityIncrease_AgedBrie() {
+    void test_RapidQualityIncrease_AgedBrie_case1() {
         Item[] items = new Item[] { new Item("Aged Brie", -2, 5) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(7, app.items[0].quality);
+    }
+
+    @Test
+    void test_RapidQualityIncrease_AgedBrie_case2() {
+        Item[] items = new Item[] { new Item("Aged Brie", 0, 5) };
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals(7, app.items[0].quality);

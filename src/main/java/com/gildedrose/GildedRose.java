@@ -1,15 +1,29 @@
 package com.gildedrose;
 
+import com.gildedrose.rules.DecreaseQualityDoubleRule;
+import com.gildedrose.rules.DecreaseQualityRule;
+import com.gildedrose.rules.EnforceQualityBoundariesRule;
+import com.gildedrose.rules.IncreaseQualityDeadlineRule;
+import com.gildedrose.rules.IncreaseQualityRule;
+import com.gildedrose.rules.InventoryRule;
+import com.gildedrose.rules.UpdateSellInRule;
+
+import java.util.List;
+
 class GildedRose {
-
-    private static final int GENERIC_DECREASE_RATE = 1;
-    private static final int CONJURED_DECREASE_RATE = GENERIC_DECREASE_RATE * 2;
-
-    private static final int BACKSTAGE_PASS_MAX_QUALITY_INCREASE = 3;
-    private static final int BACKSTAGE_PASS_MEDIUM_QUALITY_INCREASE = 2;
-    private static final int BACKSTAGE_PASS_MIN_QUALITY_INCREASE = 1;
-
     Item[] items;
+
+    /**
+     * The rules are applied in the order they are defined in this list.
+     */
+    private final List<InventoryRule> rules = List.of(
+        new DecreaseQualityRule(),
+        new DecreaseQualityDoubleRule(),
+        new IncreaseQualityRule(),
+        new IncreaseQualityDeadlineRule(),
+        new UpdateSellInRule(),
+        new EnforceQualityBoundariesRule()
+    );
 
     public GildedRose(Item[] items) {
         this.items = items;
@@ -17,74 +31,9 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            switch (item.name) {
-                case "Sulfuras, Hand of Ragnaros" -> {}
-                case "Aged Brie" -> updateAgedBrie(item);
-                case "Backstage passes to a TAFKAL80ETC concert" -> updateBackstagePasses(item);
-                case "Conjured Mana Cake" -> updateConjured(item);
-                default -> updateGenericItem(item);
-            }
+            rules.stream()
+                .filter(rule -> rule.appliesTo(item))
+                .forEach(rule -> rule.apply(item));
         }
     }
-
-    private void updateGenericItem(Item item) {
-        decreaseQuality(item, GENERIC_DECREASE_RATE);
-        enforceQualityBoundaries(item);
-        advanceDay(item);
-    }
-
-    private void updateAgedBrie(Item item) {
-        increaseQuality(item);
-        enforceQualityBoundaries(item);
-        advanceDay(item);
-    }
-
-    private void updateBackstagePasses(Item item) {
-        if (item.sellIn > 10) {
-            increaseQuality(item, BACKSTAGE_PASS_MIN_QUALITY_INCREASE);
-        } else if (item.sellIn > 5) {
-            increaseQuality(item, BACKSTAGE_PASS_MEDIUM_QUALITY_INCREASE);
-        } else if (item.sellIn > 0) {
-            increaseQuality(item, BACKSTAGE_PASS_MAX_QUALITY_INCREASE);
-        } else {
-            item.quality = 0;
-        }
-        enforceQualityBoundaries(item);
-        advanceDay(item);
-    }
-
-    private void updateConjured(Item item) {
-        decreaseQuality(item, CONJURED_DECREASE_RATE);
-        enforceQualityBoundaries(item);
-        advanceDay(item);
-    }
-
-    private void enforceQualityBoundaries(Item item) {
-        if (item.quality < 0) {
-            item.quality = 0;
-        } else if (item.quality > 50) {
-            item.quality = 50;
-        }
-    }
-
-    private void advanceDay(Item item) {
-        item.sellIn--;
-    }
-
-    private void decreaseQuality(Item item, int baseAmount) {
-        if (item.sellIn > 0) {
-            item.quality -= baseAmount;
-        } else {
-            item.quality -= baseAmount * 2;
-        }
-    }
-
-    private void increaseQuality(Item item) {
-        increaseQuality(item, 1);
-    }
-
-    private void increaseQuality(Item item, int amount) {
-        item.quality += amount;
-    }
-
 }
